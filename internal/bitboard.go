@@ -22,10 +22,11 @@ func (bb *Bitboard) PopBit(sq Square) {
 }
 
 func GetSquareNumber(r Rank, f File) Square {
-	return 8*r + f
+	return r<<3 + f
 }
 
 func (bb *Bitboard) Print() {
+	fmt.Println()
 	for rank := RankEight; rank >= RankOne; rank-- {
 		fmt.Printf("%d", rank+1)
 		for file := FileA; file <= FileH; file++ {
@@ -38,5 +39,6 @@ func (bb *Bitboard) Print() {
 		fmt.Println()
 	}
 	fmt.Println("   a  b  c  d  e  f  g  h")
-	fmt.Printf("\nBitboard: 0x%016X", *bb)
+	fmt.Printf("Bitboard: 0x%016X", *bb)
+	fmt.Println()
 }

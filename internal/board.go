@@ -2,8 +2,13 @@ package internal
 
 import "fmt"
 
-type Piece = int8
+type PieceType = int8
 type Color = int8
+
+type Piece struct {
+	Color Color
+	Type  PieceType
+}
 
 const (
 	White   Color = iota
@@ -15,45 +20,23 @@ const NumColors = 2
 const NumPieceTypes = 6
 
 const (
-	Pawn    Piece = iota
-	Knight  Piece = iota
-	Bishop  Piece = iota
-	Rook    Piece = iota
-	Queen   Piece = iota
-	King    Piece = iota
-	NoPiece Piece = iota
+	Pawn       PieceType = iota
+	Knight     PieceType = iota
+	Bishop     PieceType = iota
+	Rook       PieceType = iota
+	Queen      PieceType = iota
+	King       PieceType = iota
+	EmptyPiece PieceType = iota
 )
 
-var UnicodePieces = [NumColors][NumPieceTypes]string{{"♙", "♘", "♗", "♖", "♕", "♔"}, {"♟", "♞", "♝", "♜", "♛", "♚"}}
+var NoPiece = Piece{Color: NoColor, Type: EmptyPiece}
 
 type BoardState struct {
 	Pieces [NumPieceTypes]Bitboard
 	Color  [NumColors]Bitboard
 }
 
-func (bs *BoardState) GetPieceOnSquare(sq Square) Piece {
-	if bs.Pieces[Pawn].TestBit(sq) {
-		return Pawn
-	}
-	if bs.Pieces[Knight].TestBit(sq) {
-		return Knight
-	}
-	if bs.Pieces[Bishop].TestBit(sq) {
-		return Bishop
-	}
-	if bs.Pieces[Rook].TestBit(sq) {
-		return Rook
-	}
-	if bs.Pieces[Queen].TestBit(sq) {
-		return Queen
-	}
-	if bs.Pieces[King].TestBit(sq) {
-		return King
-	}
-	return NoPiece
-}
-
-func (bs *BoardState) GetColorOnSquare(sq Square) Color {
+func (bs *BoardState) GetColorOccupying(sq Square) Color {
 	if bs.Color[White].TestBit(sq) {
 		return White
 	}
@@ -63,22 +46,31 @@ func (bs *BoardState) GetColorOnSquare(sq Square) Color {
 	return NoColor
 }
 
+func (bs *BoardState) GetPieceOnSquare(sq Square) Piece {
+	pieceColor := bs.GetColorOccupying(sq)
+	if pieceColor == NoColor {
+		return NoPiece
+	}
+	var pieceType PieceType
+	for i, bb := range bs.Pieces {
+		if bb.TestBit(sq) {
+			pieceType = int8(i)
+		}
+	}
+	return Piece{Color: pieceColor, Type: pieceType}
+}
+
 func (bs *BoardState) Print() {
 	for rank := RankEight; rank >= RankOne; rank-- {
 		fmt.Printf("%d", rank+1)
 		for file := FileA; file <= FileH; file++ {
 			sq := GetSquareNumber(rank, file)
-			color := bs.GetColorOnSquare(sq)
-			if color == NoColor {
-				fmt.Printf("  .")
-				continue
-			}
 			piece := bs.GetPieceOnSquare(sq)
 			if piece == NoPiece {
 				fmt.Printf("  .")
 				continue
 			}
-			fmt.Printf("  %s", UnicodePieces[color][piece])
+			fmt.Printf("  %s", UnicodePieces[piece.Color][piece.Type])
 		}
 		fmt.Println()
 	}

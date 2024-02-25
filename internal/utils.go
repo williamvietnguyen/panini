@@ -4,13 +4,17 @@ type Square = int8
 type Rank = int8
 type File = int8
 
+var UnicodePieces = [NumColors][NumPieceTypes]string{{"♙", "♘", "♗", "♖", "♕", "♔"}, {"♟", "♞", "♝", "♜", "♛", "♚"}}
+
+const NumSquares int8 = 64
+
 const (
-	RankOne Rank = iota
-	RankTwo Rank = iota
+	RankOne   Rank = iota
+	RankTwo   Rank = iota
 	RankThree Rank = iota
-	RankFour Rank = iota
-	RankFive Rank = iota
-	RankSix Rank = iota
+	RankFour  Rank = iota
+	RankFive  Rank = iota
+	RankSix   Rank = iota
 	RankSeven Rank = iota
 	RankEight Rank = iota
 )
