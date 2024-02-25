@@ -26,9 +26,9 @@ func GetSquareNumber(r Rank, f File) Square {
 }
 
 func (bb *Bitboard) Print() {
-	for rank := RANK_8; rank >= RANK_1; rank-- {
+	for rank := RankEight; rank >= RankOne; rank-- {
 		fmt.Printf("%d", rank+1)
-		for file := FILE_A; file <= FILE_H; file++ {
+		for file := FileA; file <= FileH; file++ {
 			if bb.TestBit(GetSquareNumber(rank, file)) {
 				fmt.Print("  x")
 			} else {
