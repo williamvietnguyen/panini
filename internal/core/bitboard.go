@@ -1,4 +1,4 @@
-package internal
+package core
 
 import "fmt"
 
@@ -25,20 +25,20 @@ func GetSquareNumber(r Rank, f File) Square {
 	return r<<3 + f
 }
 
-func (bb *Bitboard) Print() {
-	fmt.Println()
+func (bb *Bitboard) String() string {
+	s := ""
 	for rank := RankEight; rank >= RankOne; rank-- {
-		fmt.Printf("%d", rank+1)
+		s += fmt.Sprintf("%d", rank+1)
 		for file := FileA; file <= FileH; file++ {
 			if bb.TestBit(GetSquareNumber(rank, file)) {
-				fmt.Print("  x")
+				s += "  x"
 			} else {
-				fmt.Print("  .")
+				s += "  ."
 			}
 		}
-		fmt.Println()
+		s += "\n"
 	}
-	fmt.Println("   a  b  c  d  e  f  g  h")
-	fmt.Printf("Bitboard: 0x%016X", *bb)
-	fmt.Println()
+	s += "   a  b  c  d  e  f  g  h\n"
+	s += fmt.Sprintf("Bitboard: 0x%016X\n", *bb)
+	return s
 }
