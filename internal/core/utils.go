@@ -1,4 +1,4 @@
-package internal
+package core
 
 type Square = int8
 type Rank = int8

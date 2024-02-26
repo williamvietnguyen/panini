@@ -1,4 +1,4 @@
-package internal
+package core
 
 const NotHFile Bitboard = 0x7F7F7F7F7F7F7F7F
 const NotAFile Bitboard = 0xFEFEFEFEFEFEFEFE
