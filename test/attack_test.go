@@ -1,7 +1,7 @@
 package test
 
 import (
-	"panini/internal/core"
+	"github.com/williamvietnguyen/panini/internal/core"
 	"testing"
 )
 
