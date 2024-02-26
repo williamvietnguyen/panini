@@ -31,28 +31,29 @@ const (
 
 var NoPiece = Piece{Color: NoColor, Type: EmptyPiece}
 
-type BoardState struct {
+// Position represents the state of a position
+type Position struct {
 	Pieces [NumPieceTypes]Bitboard
 	Color  [NumColors]Bitboard
 }
 
-func (bs *BoardState) GetColorOccupying(sq Square) Color {
-	if bs.Color[White].TestBit(sq) {
+func (p *Position) GetColorOccupying(sq Square) Color {
+	if p.Color[White].TestBit(sq) {
 		return White
 	}
-	if bs.Color[Black].TestBit(sq) {
+	if p.Color[Black].TestBit(sq) {
 		return Black
 	}
 	return NoColor
 }
 
-func (bs *BoardState) GetPieceOnSquare(sq Square) Piece {
-	pieceColor := bs.GetColorOccupying(sq)
+func (p *Position) GetPieceOnSquare(sq Square) Piece {
+	pieceColor := p.GetColorOccupying(sq)
 	if pieceColor == NoColor {
 		return NoPiece
 	}
 	var pieceType PieceType
-	for i, bb := range bs.Pieces {
+	for i, bb := range p.Pieces {
 		if bb.TestBit(sq) {
 			pieceType = int8(i)
 		}
@@ -60,25 +61,27 @@ func (bs *BoardState) GetPieceOnSquare(sq Square) Piece {
 	return Piece{Color: pieceColor, Type: pieceType}
 }
 
-func (bs *BoardState) Print() {
+func (p *Position) String() string {
+	s := ""
 	for rank := RankEight; rank >= RankOne; rank-- {
-		fmt.Printf("%d", rank+1)
+		s += fmt.Sprintf("%d", rank+1)
 		for file := FileA; file <= FileH; file++ {
 			sq := GetSquareNumber(rank, file)
-			piece := bs.GetPieceOnSquare(sq)
+			piece := p.GetPieceOnSquare(sq)
 			if piece == NoPiece {
-				fmt.Printf("  .")
+				s += "  ."
 				continue
 			}
-			fmt.Printf("  %s", UnicodePieces[piece.Color][piece.Type])
+			s += fmt.Sprintf("  %s", UnicodePieces[piece.Color][piece.Type])
 		}
-		fmt.Println()
+		s += "\n"
 	}
-	fmt.Println("   a  b  c  d  e  f  g  h")
+	s += "   a  b  c  d  e  f  g  h\n"
+	return s
 }
 
-func InitializeBoardState() BoardState {
-	bs := BoardState{
+func GetStartingPosition() Position {
+	p := Position{
 		Pieces: [NumPieceTypes]Bitboard{
 			0x00ff00000000ff00,
 			0x4200000000000042,
@@ -92,5 +95,5 @@ func InitializeBoardState() BoardState {
 			0xffff000000000000,
 		},
 	}
-	return bs
+	return p
 }
